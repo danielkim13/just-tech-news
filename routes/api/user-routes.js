@@ -19,6 +19,18 @@ router.get("/:id", (req, res) => {
   User.findOne({
     attributes: { exclude: ["password"] },
     where: { id: req.params.id },
+    include: [
+        {
+          model: Post,
+          attributes: ['id', 'title', 'post_url', 'created_at']
+        },
+        {
+          model: Post,
+          attributes: ['title'],
+          through: Vote,
+          as: 'voted_posts'
+        }
+      ]
   })
     .then((dbUserData) => {
       if (!dbUserData) {
